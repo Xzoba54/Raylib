@@ -12,3 +12,8 @@ enum class ContentID : uint16_t {
 
     COUNT
 };
+
+struct InventorySlot{
+    ContentID id = ContentID::None;
+    int quantity = 0;
+};

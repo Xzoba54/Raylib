@@ -30,14 +30,18 @@ void TileMap::Init(){
     this->LoadMapFromFile();
 }
 
-void TileMap::SetObject(int x, int y, const std::shared_ptr<Object>& object){
-    if(!IsValidPosition(x, y)){
-        return;
-    }
+void TileMap::SetObject(int x, int y, ContentID objectID){
+    if(!IsValidPosition(x, y)) return;
+    if(HasObject(x, y)) return;
 
+    std::shared_ptr<Object> object = ObjectRegistry::Create(objectID);
     std::shared_ptr<Tile> tile = tiles[y][x];
 
     tile->SetObject(object);
+}
+
+void TileMap::RemoveObject(int x, int y){
+    tiles[y][x]->SetObject(nullptr);
 }
 
 bool TileMap::HasObject(int x, int y) const
@@ -52,6 +56,30 @@ bool TileMap::HasObject(int x, int y) const
 bool TileMap::IsValidPosition(int x, int y) const
 {
     return (x >= 0 && x < width && y >= 0 && y < height);
+}
+
+std::shared_ptr<Object> TileMap::GetObject(int x, int y) const{
+    if(!IsValidPosition(x, y)){
+        return nullptr;
+    }
+    if(!HasObject(x, y)){
+        return nullptr;
+    }
+
+    std::shared_ptr<Object> object = tiles[y][x]->GetObject();
+
+    return object;
+}
+
+ContentID TileMap::GetObjectID(int x, int y) const{
+    if(!IsValidPosition(x, y)){
+        return ContentID::None;
+    }
+    if(!HasObject(x, y)){
+        return ContentID::None;
+    }
+
+    return tiles[y][x]->GetObjectID();
 }
 
 void TileMap::LoadMapFromFile(){
@@ -82,10 +110,7 @@ void TileMap::LoadMapFromFile(){
 
         stream >> id >> x >> y;
 
-        std::shared_ptr<Tile> tile = tiles[y][x];
-        std::shared_ptr<Object> object = ObjectRegistry::Create(id);
-
-        this->SetObject(x, y, object);
+        this->SetObject(x, y, ContentID(id));
     }
 
     stream.close();

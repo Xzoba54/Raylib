@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "TextureManager.h"
-#include "ObjectRegistry.h"
+#include "ItemRegister.h"
 #include <vector>
 #include <cmath>
 
@@ -13,8 +13,11 @@ public:
     void Update() override;
     void Render() const override;
 
-    // void SetItem(const ItemDef& item, int quantity);
-    // void SetItem(const ItemDef& item, int quantity, int x, int y);
+    void SetItem(const ContentID& itemID, int quantity, int index);
+    void SetItem(const ContentID& itemID, int quantity, int x, int y);
+
+    InventorySlot& GetSlot(int x, int y);
+    InventorySlot& GetSlot(int index);
 private:
     Texture2D texture;
 
@@ -23,5 +26,5 @@ private:
 
     int inventoryHeight;
 
-    // std::vector<ItemStack> inventory;
+    std::vector<InventorySlot> inventory;
 };

@@ -5,19 +5,26 @@ void ToolBar::Init(){
     this->bottomMargin = 30;
     this->slotsSize = 2;
 
-    this->position = {
-        (float)GetScreenWidth() / 2.0f - ((float)texture.width / 2.0f), 
-        (float)GetScreenHeight() - texture.height - bottomMargin
-    };
+    this->x = (GetScreenWidth() / 2.0f) - ((float)texture.width / 2.0f);
+    this->y = ((float)GetScreenHeight()) - (texture.height + bottomMargin);
 
-    this->slots.resize(slotsSize);
+    slots.clear();
+    slots.resize(slotsSize);
+
+    for(int i = 0; i < slotsSize; i++){
+        int slotX = x + i * 40 + (i + 1) * 5;
+        int slotY = y + 5;
+
+        slots[i] = Slot(slotX, slotY, 40);
+    }
+
     this->AddItemAt(0, ContentID::Pickaxe);
     this->AddItemAt(1, ContentID::Chest);
 }
 
 Rectangle ToolBar::GetRec()
 {
-    Rectangle rec = {position.x, position.y, (float)texture.width, (float)texture.height};
+    Rectangle rec = {x, y, (float)texture.width, (float)texture.height};
 
     return rec;
 }
@@ -28,29 +35,24 @@ ContentID &ToolBar::GetSelectedItem(){
 
 
 void ToolBar::AddItemAt(int slot, const ContentID& itemID){
-    slots[slot] = std::make_unique<Slot>(slot * 40 + slot * 5 + position.x + 5, position.y + 5, itemID);
+    slots[slot].SetItem(itemID);
 }
 
 
 void ToolBar::Update(){
     for(auto& slot : slots){
-        if(slot == nullptr){
-            break;
-        }
+        slot.Update();
 
-        slot->Update();
-        if(slot->IsSelected()){
-            selectedItemID = slot->GetSelectedItem();
+        if(slot.IsSelected()){
+            selectedItemID = slot.GetItem();
         }
     }
 }
 
 void ToolBar::Render() const{
-    DrawTexture(this->texture, position.x, position.y, RAYWHITE);
+    DrawTexture(this->texture, x, y, RAYWHITE);
 
     for(auto& slot : slots){
-        if(slot){
-            slot->Render();
-        }
+        slot.Render();
     }
 }

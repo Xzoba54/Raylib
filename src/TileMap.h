@@ -30,9 +30,14 @@ public:
 
     void Init();
 
-    void SetObject(int x, int y, const std::shared_ptr<Object>& object);
+    void SetObject(int x, int y, ContentID objectID);
+    void RemoveObject(int x, int y);
+
     bool HasObject(int x, int y) const;
     bool IsValidPosition(int x, int y) const;
+
+    std::shared_ptr<Object> GetObject(int x, int y) const;
+    ContentID GetObjectID(int x, int y) const;
 
     void LoadMapFromFile();
 private:

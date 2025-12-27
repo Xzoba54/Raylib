@@ -5,6 +5,8 @@ void Window::Init(int width, int height, const char *title){
 
     InitWindow(width, height, title);
     SetFps(60);
+
+    SetExitKey(KEY_NULL);
 }
 
 void Window::SetFps(int fps)

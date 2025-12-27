@@ -6,25 +6,31 @@
 
 class Slot{
 public:
-    Slot(int screenX, int screenY, const ContentID& itemID);
+    Slot() = default;
+    Slot(int x, int y, int size);
 
     void Update();
     void Render() const;
 
-    ContentID& GetSelectedItem();
+    void SetItem(ContentID itemID);
+
+    ContentID GetItem() const;
 
     bool IsSelected() const;
+
 private:
+    void UpdateTexture();
+
     Vector2 position;
     Vector2 texturePosition;
 
-    //temp
+    int slotSize;
+
     ContentID itemID;
     Texture2D texture;
 
-    int slotSize;
+    Rectangle rect;
 
-    Rectangle hoverRec;
     Color colorIdle;
     Color colorHover;
     Color currentColor;

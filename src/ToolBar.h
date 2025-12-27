@@ -24,13 +24,14 @@ private:
 
     Texture2D texture;
 
-    Vector2 position;
+    float x;
+    float y;
 
     int bottomMargin;
 
     int slotsSize;
 
-    std::vector<std::unique_ptr<Slot>> slots;
+    std::vector<Slot> slots;
 
     ContentID selectedItemID;
 };

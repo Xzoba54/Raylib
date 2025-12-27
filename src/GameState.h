@@ -8,6 +8,7 @@
 #include "ToolBar.h"
 #include "ObjectRegistry.h"
 #include "ItemRegister.h"
+#include "ChestUI.h"
 
 enum class Mode{
     NORMAL,
@@ -21,14 +22,17 @@ public:
     void Update() override;
     void Render() override;
 
-    void ProcessInput();
-    void HandleMouseClick(int gridX, int gridY);
-
-    void PlaceObject(int gridX, int gridY, const ContentID& objectID);
-    void RemoveObject(int gridX, int gridY);
-
     void InitTextures();
 private:
+    void ProcessInput();
+    void HandleCameraInput();
+
+    void UpdateMouseRouting();
+    void HandleWorldClick();
+
+    void HandleMouseClickLeft();
+    void HandleMouseClickRight();
+
     TileMap map;
     Camera2D camera;
 
@@ -37,9 +41,12 @@ private:
     ToolBar toolbar;
 
     Vector2 mousePosInWorld;
+    float gridX;
+    float gridY;
     
     Mode mode;
     
     ContentID selectedItemID;
-    Texture2D chestUI;
+
+    ChestUI chestUI;
 };

@@ -19,3 +19,7 @@ void Tile::SetObject(const std::shared_ptr<Object>& obj){
         this->object->SetWorldPosition(position);
     }
 }
+
+ContentID Tile::GetObjectID() const{
+    return object->GetObjectID();
+}

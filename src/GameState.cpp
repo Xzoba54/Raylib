@@ -8,12 +8,10 @@ GameState::GameState(Window& window) :
     this->InitTextures();
     this->map.Init();
     this->toolbar.Init();
+    this->chestUI.Init(window);
 
     this->mode = Mode::BUILDING;
     this->selectedItemID = ContentID::Chest;
-
-    //TEMP
-    this->chestUI = TextureManager::GetTexture("CHEST_INVENTORY_UI");
 
     slime = std::make_unique<Slime>(4 * TILESIZE, 4 * TILESIZE);
     
@@ -24,23 +22,30 @@ GameState::GameState(Window& window) :
 }
 
 void GameState::Update(){
-    this->ProcessInput();
+    ProcessInput();
 
     mousePosInWorld = GetScreenToWorld2D(GetMousePosition(), camera);
-    int gridX = mousePosInWorld.x / TILESIZE;
-    int gridY = mousePosInWorld.y / TILESIZE;
+    gridX = mousePosInWorld.x / TILESIZE;
+    gridY = mousePosInWorld.y / TILESIZE;
 
     map.Update(mousePosInWorld);
     slime->Update();
 
     selectedItemID = toolbar.GetSelectedItem();
 
-    if(CheckCollisionPointRec(GetMousePosition(), toolbar.GetRec())){
-        toolbar.Update();
+    if(map.GetObjectID(gridX, gridY) == ContentID::Chest && IsKeyPressed(KEY_P)){
+        std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
+
+        chest->SetItem(ContentID::Pickaxe, 1, 0);
+        chest->SetItem(ContentID::Chest, 2, 1);
     }
-    else{
-        this->HandleMouseClick(gridX, gridY);
+
+    if(chestUI.IsOpen()){
+        chestUI.Update();
     }
+    toolbar.Update();
+
+    UpdateMouseRouting();
 }
 
 void GameState::Render(){
@@ -52,55 +57,62 @@ void GameState::Render(){
 
     //render UI
     toolbar.Render();
-    DrawTexture(this->chestUI, 300, 300, RAYWHITE);
-}
-
-void GameState::ProcessInput(){
-    float mouseWheelPos = GetMouseWheelMove();
-
-    if(mouseWheelPos < 0){
-        camera.zoom -= 0.05f;
-    }
-    else if(mouseWheelPos > 0){
-        camera.zoom += 0.05f;
-    }
-
-    if(IsKeyDown(KEY_A)){
-        camera.target.x -= 1.5f;
-    }
-    if(IsKeyDown(KEY_D)){
-        camera.target.x += 1.5f;
-    }
-    if(IsKeyDown(KEY_W)){
-        camera.target.y -= 1.5f;
-    }
-    if(IsKeyDown(KEY_S)){
-        camera.target.y += 1.5f;
+    
+    if(chestUI.IsOpen()){
+        chestUI.Render();
     }
 }
 
-void GameState::HandleMouseClick(int gridX, int gridY){
-    if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-        PlaceObject(gridX, gridY, selectedItemID);
+void GameState::HandleCameraInput(){
+    float wheel = GetMouseWheelMove();
+    camera.zoom += wheel * 0.05f;
+
+    if(IsKeyDown(KEY_A)) camera.target.x -= 1.5f;
+    if(IsKeyDown(KEY_D)) camera.target.x += 1.5f;
+    if(IsKeyDown(KEY_W)) camera.target.y -= 1.5f;
+    if(IsKeyDown(KEY_S)) camera.target.y += 1.5f;
+}
+
+void GameState::UpdateMouseRouting(){
+    Vector2 mouse = GetMousePosition();
+
+    if(CheckCollisionPointRec(mouse, toolbar.GetRec())) return;
+    if(chestUI.IsOpen() && CheckCollisionPointRec(mouse, chestUI.GetRec())) return;
+
+    HandleWorldClick();
+}
+
+void GameState::HandleWorldClick(){
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        HandleMouseClickLeft();
     }
-    else if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-        RemoveObject(gridX, gridY);
+    else if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
+        HandleMouseClickRight();
     }
 }
 
-void GameState::PlaceObject(int gridX, int gridY, const ContentID& objectID){
-    if(objectID == ContentID::None) return;
-    if(!ObjectRegistry::IsPlaceable(objectID)) return;
-    if(map.HasObject(gridX, gridY)) return;
+void GameState::HandleMouseClickLeft(){
+    ContentID id = map.GetObjectID(gridX, gridY);
+    
+    if(selectedItemID != ContentID::None && 
+       ObjectRegistry::IsPlaceable(selectedItemID)){
+        map.SetObject(gridX, gridY, selectedItemID);
+    }
 
-    std::shared_ptr<Object> object = ObjectRegistry::Create(objectID);
-    map.SetObject(gridX, gridY, object);
+    if(id == ContentID::Chest){
+        std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
+
+        if(chestUI.IsOpen()){
+            chestUI.Close();
+        }
+        else{
+            chestUI.Open(chest);
+        }
+    }
 }
 
-void GameState::RemoveObject(int gridX, int gridY){
-    if(!map.HasObject(gridX, gridY)) return;
-
-    map.SetObject(gridX, gridY, nullptr);
+void GameState::HandleMouseClickRight(){
+    map.RemoveObject(gridX, gridY);
 }
 
 void GameState::InitTextures(){
@@ -123,4 +135,12 @@ void GameState::InitTextures(){
     //UI
     TextureManager::LoadTexture("CHEST_INVENTORY_UI", "assets/chest_inventory_ui.png");
     TextureManager::LoadTexture("TOOLBAR", "assets/toolbar.png");
+}
+
+void GameState::ProcessInput(){
+    HandleCameraInput();
+
+    if(chestUI.IsOpen() && IsKeyPressed(KEY_ESCAPE)){
+        chestUI.Close();
+    }
 }
