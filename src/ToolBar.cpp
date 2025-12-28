@@ -3,9 +3,10 @@
 void ToolBar::Init(){
     this->texture = TextureManager::GetTexture("TOOLBAR");
     this->bottomMargin = 30;
+
     inventorySize = 2;
     open = true;
-    slotDragging = false;
+    canDrag = false;
 
     this->x = (GetScreenWidth() / 2.0f) - ((float)texture.width / 2.0f);
     this->y = ((float)GetScreenHeight()) - (texture.height + bottomMargin);
@@ -13,15 +14,24 @@ void ToolBar::Init(){
     slots.clear();
     slots.resize(inventorySize);
 
+    toolbarSlots.clear();
+    toolbarSlots.resize(inventorySize);
+
     for(int i = 0; i < inventorySize; i++){
         int slotX = x + i * 40 + (i + 1) * 5;
         int slotY = y + 5;
 
         slots[i] = Slot(slotX, slotY, 40);
+        slots[i].BindData(&toolbarSlots[i]);
     }
 
-    this->AddItemAt(0, ContentID::Wall);
-    this->AddItemAt(1, ContentID::Chest);
+    AddItem(ContentID::Wall, 0);
+    AddItem(ContentID::Chest, 1);
+}
+
+void ToolBar::AddItem(const ContentID &itemID, int slot){
+    toolbarSlots[slot] = {itemID, 0};
+    slots[slot].Update();
 }
 
 Rectangle ToolBar::GetRec() const{
@@ -30,20 +40,13 @@ Rectangle ToolBar::GetRec() const{
     return rec;
 }
 
-
 ContentID ToolBar::GetSelectedItem(){
-    if(selectedSlot != -1){
-        return slots[selectedSlot].GetItem();
+    if(drag.src){
+        return drag.item.id;
     }
 
     return ContentID::None;
 }
-
-
-void ToolBar::AddItemAt(int slot, const ContentID& itemID){
-    slots[slot].SetItem(itemID, 0);
-}
-
 
 void ToolBar::Update(){
     HandleSlots();
@@ -54,7 +57,7 @@ void ToolBar::Update(){
 }
 
 void ToolBar::Render() const{
-    DrawTexture(this->texture, x, y, RAYWHITE);
+    DrawTexture(texture, x, y, RAYWHITE);
     
     RenderSlots();
 

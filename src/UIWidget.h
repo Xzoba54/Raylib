@@ -4,6 +4,11 @@
 #include "Slot.h"
 #include <vector>
 
+struct DragState{
+    InventorySlot item;
+    InventorySlot* src = nullptr;
+};
+
 class UIWidget{ 
 public:
     UIWidget();
@@ -17,6 +22,8 @@ public:
     virtual void Open() { this->open = true; }
     virtual void Close() { this->open = false; }
 
+    void CancelDrag();
+
     bool IsOpen() const { return this->open; }
 protected:
     void HandleSlots();
@@ -27,14 +34,17 @@ protected:
 
     int hoveredSlot;
     int selectedSlot;
-    int slotDragging;
+    int canDrag;
 
     bool open;
 
     int inventorySize;
 
+    DragState drag;
+
     std::vector<Slot> slots;
-    InventorySlot dragging;
 private:
     int GetSlotIndexAt(const Vector2& mouse);
+    void TakeItem();
+    void PlaceItem();
 };

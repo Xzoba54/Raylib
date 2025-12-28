@@ -2,9 +2,9 @@
 
 #include "UIWidget.h"
 #include "TextureManager.h"
-#include <memory>
 #include "Chest.h"
 #include "Window.h"
+#include <memory>
 
 class ChestUI : public UIWidget{
 public:
@@ -15,9 +15,9 @@ public:
 
     void Init(Window& window);
 
-    void Open(std::shared_ptr<Chest> chest);
-
     Rectangle GetRec() const override;
+
+    void Open(std::shared_ptr<Chest> chest);
 private:
     Texture2D texture;
 

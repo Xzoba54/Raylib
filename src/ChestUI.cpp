@@ -6,10 +6,11 @@ void ChestUI::Init(Window& window){
     this->x = (window.GetSize().x / 2.0f) - ((float)texture.width / 2.0f);
     this->y = (window.GetSize().y / 2.0f) - ((float)texture.height / 2.0f);
 
-    inventorySize = 14;
     open = false;
-    this->slotsPerRow = 6;
 
+    inventorySize = 14;
+    this->slotsPerRow = 6;
+    
     this->slotSize = 40;
     this->slotPadding = 5;
     this->headerMargin = 27;
@@ -31,13 +32,11 @@ void ChestUI::Init(Window& window){
 }
 
 void ChestUI::Open(std::shared_ptr<Chest> chest){
-    this->currentChest = chest;
+    currentChest = chest;
     open = true;
 
     for(int i = 0; i < inventorySize; i++){
-        ContentID id = chest->GetSlot(i).id;
-        int quantity = chest->GetSlot(i).quantity;
-        slots[i].SetItem(id, quantity);
+        slots[i].BindData(&currentChest->GetSlot(i));
     }
 }
 
@@ -49,16 +48,10 @@ Rectangle ChestUI::GetRec() const{
 
 void ChestUI::Update(){
     HandleSlots();
-
-    for(int i = 0; i < inventorySize; i++){
-        slots[i].Update();
-
-        currentChest->SetItem(slots[i].GetItem(), slots[i].GetQuantity(), i);
-    }
 }
 
 void ChestUI::Render() const{
-    DrawTexture(this->texture, x, y, RAYWHITE);
+    DrawTexture(texture, x, y, RAYWHITE);
 
     RenderSlots();
 

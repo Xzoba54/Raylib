@@ -99,6 +99,8 @@ void GameState::HandleMouseClickLeft(){
         map.SetObject(gridX, gridY, selectedItemID);
     }
 
+    if(selectedItemID != ContentID::None) return;
+
     if(id == ContentID::Chest){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
 
@@ -140,7 +142,9 @@ void GameState::InitTextures(){
 void GameState::ProcessInput(){
     HandleCameraInput();
 
-    if(chestUI.IsOpen() && IsKeyPressed(KEY_ESCAPE)){
+    if(IsKeyPressed(KEY_ESCAPE)){
+        toolbar.CancelDrag();
+        chestUI.CancelDrag();
         chestUI.Close();
     }
 }

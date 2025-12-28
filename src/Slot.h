@@ -12,10 +12,9 @@ public:
     void Update();
     void Render() const;
 
-    void SetItem(ContentID itemID, int quantity);
+    void BindData(InventorySlot* data);
 
-    ContentID GetItem() const;
-    int GetQuantity() const;
+    InventorySlot* GetData();
 
     Rectangle GetRec() const;
 
@@ -24,15 +23,15 @@ private:
     void UpdateText();
 
     Vector2 position;
+    Vector2 textPos;
     Vector2 texturePosition;
+
+    Texture2D texture;
 
     int slotSize;
 
-    Texture2D texture;
-    ContentID itemID;
-    int quantity;
-
-    Vector2 textPos;
     int fontSize;
     float textPadding;
+
+    InventorySlot* data;
 };

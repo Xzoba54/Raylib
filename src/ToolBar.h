@@ -1,11 +1,11 @@
 #pragma once
 
 #include "UIWidget.h"
-#include <vector>
 #include "Slot.h"
-#include <memory>
 #include "TextureManager.h"
 #include "ItemRegister.h"
+#include <vector>
+#include <memory>
 
 class ToolBar : public UIWidget{
 public:
@@ -20,7 +20,7 @@ public:
 
     void Init();
 private:
-    void AddItemAt(int slot, const ContentID& itemID);
+    void AddItem(const ContentID& itemID, int slot);
 
     Texture2D texture;
 
@@ -28,4 +28,6 @@ private:
     float y;
 
     int bottomMargin;
+
+    std::vector<InventorySlot> toolbarSlots;
 };
