@@ -4,51 +4,49 @@ Slot::Slot(int x, int y, int size){
     this->position = {(float)x, (float)y};
     this->slotSize = size;
     this->itemID = ContentID::None;
-    this->selected = false;
-
-    this->rect = {position.x, position.y, (float)slotSize, (float)slotSize};
-
-    colorIdle = {62, 62, 62, 255};
-    colorHover = {80, 80, 80, 255};
-    currentColor = colorIdle;
+    this->fontSize = 4;
+    this->textPadding = 3;
 }
 
-void Slot::Update()
-{
-    Vector2 mousePos = GetMousePosition();
+void Slot::Update(){
 
-    if(CheckCollisionPointRec(mousePos, rect)){
-        this->currentColor = colorHover;
-
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            this->selected = true;
-        }
-    }else{
-        this->currentColor = colorIdle;
-        this->selected = false;
-    }
 }
 
 void Slot::Render() const{
-    DrawRectangleRec(rect, currentColor);
-
     if(itemID != ContentID::None){
         DrawTexture(texture, texturePosition.x, texturePosition.y, RAYWHITE);
+
+        if(quantity != 0){
+            DrawText(std::to_string(quantity).c_str(), textPos.x, textPos.y, fontSize, RAYWHITE);
+        }
     }
 }
 
-void Slot::SetItem(ContentID itemID){
+void Slot::SetItem(ContentID itemID, int quantity){
     this->itemID = itemID;
+    this->quantity = quantity;
     
     UpdateTexture();
+    UpdateText();
 }
 
 ContentID Slot::GetItem() const{
     return itemID;
 }
 
-bool Slot::IsSelected() const{
-    return selected;
+Rectangle Slot::GetRec() const{
+    Rectangle rec = {position.x, position.y, (float)slotSize, (float)slotSize};
+
+    return rec;
+}
+
+void Slot::UpdateText(){
+    int textWidth = MeasureText(std::to_string(quantity).c_str(), fontSize);
+
+    textPos = {
+        position.x + slotSize - textWidth - textPadding,
+        position.y + slotSize - 2*fontSize - textPadding
+    };
 }
 
 void Slot::UpdateTexture(){

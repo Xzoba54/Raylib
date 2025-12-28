@@ -37,7 +37,7 @@ void GameState::Update(){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
 
         chest->SetItem(ContentID::Pickaxe, 1, 0);
-        chest->SetItem(ContentID::Chest, 2, 1);
+        chest->SetItem(ContentID::Chest, 4, 1);
     }
 
     if(chestUI.IsOpen()){

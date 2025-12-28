@@ -12,14 +12,14 @@ public:
     void Update();
     void Render() const;
 
-    void SetItem(ContentID itemID);
+    void SetItem(ContentID itemID, int quantity);
 
     ContentID GetItem() const;
-
-    bool IsSelected() const;
+    Rectangle GetRec() const;
 
 private:
     void UpdateTexture();
+    void UpdateText();
 
     Vector2 position;
     Vector2 texturePosition;
@@ -28,12 +28,9 @@ private:
 
     ContentID itemID;
     Texture2D texture;
+    int quantity;
 
-    Rectangle rect;
-
-    Color colorIdle;
-    Color colorHover;
-    Color currentColor;
-
-    bool selected;
+    Vector2 textPos;
+    int fontSize;
+    float textPadding;
 };

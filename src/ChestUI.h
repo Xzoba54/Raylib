@@ -1,34 +1,35 @@
 #pragma once
 
-#include "raylib.h"
+#include "UIWidget.h"
 #include "TextureManager.h"
 #include <memory>
 #include "Chest.h"
 #include "Window.h"
 #include "Slot.h"
 
-class ChestUI {
+class ChestUI : public UIWidget{
 public:
     ChestUI() = default;
 
-    void Update();
-    void Render() const;
+    void Update() override;
+    void Render() const override;
 
     void Init(Window& window);
 
     void Open(std::shared_ptr<Chest> chest);
-    void Close();
 
-    Rectangle GetRec();
-
-    bool IsOpen() const;
+    Rectangle GetRec() const override;
 private:
+    int GetSlotIndexAt(const Vector2& mouse);
+
     Texture2D texture;
+    Color colorHover;
+
+    Rectangle hoverRec;
+    int hoveredSlot;
 
     float x;
     float y;
-
-    std::shared_ptr<Chest> currentChest;
 
     int inventorySize;
     int slotsPerRow;
@@ -38,6 +39,5 @@ private:
     int headerMargin;
 
     std::vector<Slot> slots;
-
-    bool open;
+    std::shared_ptr<Chest> currentChest;
 };

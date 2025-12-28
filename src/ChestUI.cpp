@@ -1,33 +1,20 @@
 #include "ChestUI.h"
 
-void ChestUI::Update(){
-    for(auto& slot : slots){
-        slot.Update();
-    }
-}
-
-void ChestUI::Render() const{
-    DrawTexture(texture, x, y, RAYWHITE);
-
-    for(auto& slot : slots){
-        slot.Render();
-    }
-}
-
 void ChestUI::Init(Window& window){
     this->texture = TextureManager::GetTexture("CHEST_INVENTORY_UI");
-
-    this->open = false;
+    this->colorHover = {80, 80, 80, 255};
 
     this->x = (window.GetSize().x / 2.0f) - ((float)texture.width / 2.0f);
     this->y = (window.GetSize().y / 2.0f) - ((float)texture.height / 2.0f);
 
     this->inventorySize = 14;
     this->slotsPerRow = 6;
+
     this->slotSize = 40;
     this->slotPadding = 5;
-
     this->headerMargin = 27;
+
+    this->hoveredSlot = -1;
 
     int rows = std::ceil((float)inventorySize / float(slotsPerRow));
 
@@ -47,25 +34,51 @@ void ChestUI::Init(Window& window){
 
 void ChestUI::Open(std::shared_ptr<Chest> chest){
     this->currentChest = chest;
-    this->open = true;
+    open = true;
 
     for(int i = 0; i < inventorySize; i++){
         ContentID id = chest->GetSlot(i).id;
-        slots[i].SetItem(id);
+        int quantity = chest->GetSlot(i).quantity;
+        slots[i].SetItem(id, quantity);
     }
 }
 
-void ChestUI::Close(){
-    this->currentChest = nullptr;
-    this->open = false;
-}
-
-Rectangle ChestUI::GetRec(){
+Rectangle ChestUI::GetRec() const{
     Rectangle rec = {x, y, (float)(texture.width), (float)(texture.height)};
 
     return rec;
 }
 
-bool ChestUI::IsOpen() const{
-    return this->open;
+int ChestUI::GetSlotIndexAt(const Vector2 &mouse){
+    for(int i = 0; i < inventorySize; i++){
+        if(CheckCollisionPointRec(mouse, slots[i].GetRec())){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void ChestUI::Update(){
+    hoveredSlot = GetSlotIndexAt(GetMousePosition());
+
+    if(hoveredSlot != -1){
+        hoverRec = slots[hoveredSlot].GetRec();
+    }
+
+    for(Slot& slot : slots){
+        slot.Update();
+    }
+}
+
+void ChestUI::Render() const{
+    DrawTexture(texture, x, y, RAYWHITE);
+
+    if(hoveredSlot != -1){
+        DrawRectangleRec(hoverRec, colorHover);
+    }
+
+    for(auto& slot : slots){
+        slot.Render();
+    }
 }

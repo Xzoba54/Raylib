@@ -1,25 +1,27 @@
 #pragma once
 
-#include "raylib.h"
+#include "UIWidget.h"
 #include <vector>
 #include "Slot.h"
 #include <memory>
 #include "TextureManager.h"
 #include "ItemRegister.h"
 
-class ToolBar{
+class ToolBar : public UIWidget{
 public:
     ToolBar() = default;
 
-    void Update();
-    void Render() const;
+    void Update() override;
+    void Render() const override;
 
-    Rectangle GetRec();
+    Rectangle GetRec() const;
 
-    ContentID& GetSelectedItem();
+    ContentID GetSelectedItem();
 
     void Init();
 private:
+    int GetSlotIndexAt(const Vector2& mouse);
+
     void AddItemAt(int slot, const ContentID& itemID);
 
     Texture2D texture;
@@ -33,5 +35,9 @@ private:
 
     std::vector<Slot> slots;
 
-    ContentID selectedItemID;
+    Rectangle hoverRec;
+    Color colorHover;
+
+    int hoveredSlot;
+    int selectedSlot;
 };
