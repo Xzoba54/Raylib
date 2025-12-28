@@ -34,6 +34,10 @@ ContentID Slot::GetItem() const{
     return itemID;
 }
 
+int Slot::GetQuantity() const{
+    return quantity;
+}
+
 Rectangle Slot::GetRec() const{
     Rectangle rec = {position.x, position.y, (float)slotSize, (float)slotSize};
 

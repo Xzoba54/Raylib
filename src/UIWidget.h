@@ -1,9 +1,12 @@
 #pragma once
 
 #include "raylib.h"
+#include "Slot.h"
+#include <vector>
 
-class UIWidget{
+class UIWidget{ 
 public:
+    UIWidget();
     virtual ~UIWidget() = default;
 
     virtual void Update() = 0;
@@ -16,5 +19,22 @@ public:
 
     bool IsOpen() const { return this->open; }
 protected:
-    bool open = false;
+    void HandleSlots();
+    void RenderSlots() const;
+
+    Color colorSlotHover;
+    Rectangle hoverRec;
+
+    int hoveredSlot;
+    int selectedSlot;
+    int slotDragging;
+
+    bool open;
+
+    int inventorySize;
+
+    std::vector<Slot> slots;
+    InventorySlot dragging;
+private:
+    int GetSlotIndexAt(const Vector2& mouse);
 };

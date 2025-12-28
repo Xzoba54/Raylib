@@ -20,8 +20,6 @@ public:
 
     void Init();
 private:
-    int GetSlotIndexAt(const Vector2& mouse);
-
     void AddItemAt(int slot, const ContentID& itemID);
 
     Texture2D texture;
@@ -30,14 +28,4 @@ private:
     float y;
 
     int bottomMargin;
-
-    int slotsSize;
-
-    std::vector<Slot> slots;
-
-    Rectangle hoverRec;
-    Color colorHover;
-
-    int hoveredSlot;
-    int selectedSlot;
 };

@@ -3,20 +3,17 @@
 void ToolBar::Init(){
     this->texture = TextureManager::GetTexture("TOOLBAR");
     this->bottomMargin = 30;
-    this->slotsSize = 2;
+    inventorySize = 2;
     open = true;
-    
-    this->hoveredSlot = -1;
-    this->selectedSlot = -1;
-    this->colorHover = {80, 80, 80, 255};
+    slotDragging = false;
 
     this->x = (GetScreenWidth() / 2.0f) - ((float)texture.width / 2.0f);
     this->y = ((float)GetScreenHeight()) - (texture.height + bottomMargin);
 
     slots.clear();
-    slots.resize(slotsSize);
+    slots.resize(inventorySize);
 
-    for(int i = 0; i < slotsSize; i++){
+    for(int i = 0; i < inventorySize; i++){
         int slotX = x + i * 40 + (i + 1) * 5;
         int slotY = y + 5;
 
@@ -25,16 +22,6 @@ void ToolBar::Init(){
 
     this->AddItemAt(0, ContentID::Wall);
     this->AddItemAt(1, ContentID::Chest);
-}
-
-int ToolBar::GetSlotIndexAt(const Vector2 &mouse){
-    for(int i = 0; i < slotsSize; i++){
-        if(CheckCollisionPointRec(mouse, slots[i].GetRec())){
-            return i;
-        }
-    }
-
-    return -1;
 }
 
 Rectangle ToolBar::GetRec() const{
@@ -59,15 +46,7 @@ void ToolBar::AddItemAt(int slot, const ContentID& itemID){
 
 
 void ToolBar::Update(){
-    hoveredSlot = GetSlotIndexAt(GetMousePosition());
-
-    if(hoveredSlot != -1){
-        hoverRec = slots[hoveredSlot].GetRec();
-    }
-
-    if(hoveredSlot != -1 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        selectedSlot = hoveredSlot;
-    }
+    HandleSlots();
 
     for(Slot& slot : slots){
         slot.Update();
@@ -76,10 +55,8 @@ void ToolBar::Update(){
 
 void ToolBar::Render() const{
     DrawTexture(this->texture, x, y, RAYWHITE);
-
-    if(hoveredSlot != -1){
-        DrawRectangleRec(hoverRec, colorHover);
-    }
+    
+    RenderSlots();
 
     for(auto& slot : slots){
         slot.Render();

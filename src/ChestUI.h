@@ -5,7 +5,6 @@
 #include <memory>
 #include "Chest.h"
 #include "Window.h"
-#include "Slot.h"
 
 class ChestUI : public UIWidget{
 public:
@@ -20,24 +19,16 @@ public:
 
     Rectangle GetRec() const override;
 private:
-    int GetSlotIndexAt(const Vector2& mouse);
-
     Texture2D texture;
-    Color colorHover;
-
-    Rectangle hoverRec;
-    int hoveredSlot;
 
     float x;
     float y;
 
-    int inventorySize;
     int slotsPerRow;
 
     int slotSize;
     int slotPadding;
     int headerMargin;
 
-    std::vector<Slot> slots;
     std::shared_ptr<Chest> currentChest;
 };

@@ -15,6 +15,8 @@ public:
     void SetItem(ContentID itemID, int quantity);
 
     ContentID GetItem() const;
+    int GetQuantity() const;
+
     Rectangle GetRec() const;
 
 private:
@@ -26,8 +28,8 @@ private:
 
     int slotSize;
 
-    ContentID itemID;
     Texture2D texture;
+    ContentID itemID;
     int quantity;
 
     Vector2 textPos;
