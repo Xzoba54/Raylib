@@ -4,6 +4,7 @@ Wall::Wall(){
     this->objectID = ContentID::Wall;
 
     this->texture = TextureManager::GetTexture("WALL");
+    this->textureSize = {(float)texture.width, (float)texture.height};
 }
 
 void Wall::Update(){

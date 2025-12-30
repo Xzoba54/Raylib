@@ -9,8 +9,7 @@
 #include "TextureManager.h"
 #include "Chest.h"
 #include "ObjectRegistry.h"
-
-constexpr int TILESIZE = 32;
+#include "Player.h"
 
 constexpr const char* IDToNames[] = {
     "EMPTY",
@@ -25,7 +24,15 @@ class TileMap{
 public:
     TileMap() = default;
 
+    //?????
     void Render();
+    void RenderBelowPlayer(int playerY);
+    void RenderGround();
+
+
+    //TEMP
+    void RenderTile(int x, int y);
+
     void Update(const Vector2& mousePos);
 
     void Init();

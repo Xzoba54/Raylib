@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+constexpr int TILESIZE = 32;
+
 enum class ContentID : uint16_t {
     None = 0,
     //objects

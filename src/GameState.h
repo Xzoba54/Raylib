@@ -9,6 +9,7 @@
 #include "ObjectRegistry.h"
 #include "ItemRegister.h"
 #include "ChestUI.h"
+#include "Player.h"
 
 enum class Mode{
     NORMAL,
@@ -33,6 +34,8 @@ private:
     void HandleMouseClickLeft();
     void HandleMouseClickRight();
 
+    bool CheckPlayerCollision(Rectangle playerRec);
+
     TileMap map;
     Camera2D camera;
 
@@ -47,6 +50,8 @@ private:
     Mode mode;
     
     ContentID selectedItemID;
+
+    Player player;
 
     ChestUI chestUI;
 };

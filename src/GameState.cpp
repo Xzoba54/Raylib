@@ -10,6 +10,8 @@ GameState::GameState(Window& window) :
     this->toolbar.Init();
     this->chestUI.Init(window);
 
+    this->player.Init(300, 300);
+
     this->mode = Mode::BUILDING;
     this->selectedItemID = ContentID::Chest;
 
@@ -31,6 +33,22 @@ void GameState::Update(){
     map.Update(mousePosInWorld);
     slime->Update();
 
+    player.ProcessInput();
+    Vector2 playerMovement = player.GetMovement();
+    Rectangle playerRec = player.GetRec();
+
+    Rectangle recX = playerRec;
+    recX.x += playerMovement.x;
+    if(!CheckPlayerCollision(recX)){
+        player.Move({playerMovement.x, 0});
+    }
+
+    Rectangle recY = playerRec;
+    recY.y += playerMovement.y;
+    if(!CheckPlayerCollision(recY)){
+        player.Move({0, playerMovement.y});
+    }
+
     selectedItemID = toolbar.GetSelectedItem();
 
     if(map.GetObjectID(gridX, gridY) == ContentID::Chest && IsKeyPressed(KEY_P)){
@@ -51,7 +69,18 @@ void GameState::Update(){
 void GameState::Render(){
     //render world
     BeginMode2D(camera);
+
+    //experiment
     map.Render();
+
+    player.Render();
+
+    map.RenderTile(1, 1);
+
+    //end experiment
+
+    // map.RenderBelowPlayer(int((player.GetPosition().y + player.GetHeight()) / TILESIZE));
+    std::cout << player.GetPosition().y << "\n";
     slime->Render();
     EndMode2D();
 
@@ -67,10 +96,7 @@ void GameState::HandleCameraInput(){
     float wheel = GetMouseWheelMove();
     camera.zoom += wheel * 0.05f;
 
-    if(IsKeyDown(KEY_A)) camera.target.x -= 1.5f;
-    if(IsKeyDown(KEY_D)) camera.target.x += 1.5f;
-    if(IsKeyDown(KEY_W)) camera.target.y -= 1.5f;
-    if(IsKeyDown(KEY_S)) camera.target.y += 1.5f;
+    camera.target = player.GetPosition();
 }
 
 void GameState::UpdateMouseRouting(){
@@ -104,12 +130,7 @@ void GameState::HandleMouseClickLeft(){
     if(id == ContentID::Chest){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
 
-        if(chestUI.IsOpen()){
-            chestUI.Close();
-        }
-        else{
-            chestUI.Open(chest);
-        }
+        chestUI.Open(chest);
     }
 }
 
@@ -117,7 +138,33 @@ void GameState::HandleMouseClickRight(){
     map.RemoveObject(gridX, gridY);
 }
 
+bool GameState::CheckPlayerCollision(Rectangle playerRec){
+    int minX = playerRec.x / TILESIZE;
+    int minY = playerRec.y / TILESIZE;
+    int maxX = (playerRec.x + playerRec.width) / TILESIZE;
+    int maxY = (playerRec.y + playerRec.height) / TILESIZE;
+
+    for(int y = minY; y <= maxY; y++){
+        for(int x = minX; x <= maxX; x++){
+            if(!map.IsValidPosition(x, y)) continue;
+            if(!map.HasObject(x, y)) continue;;
+
+            auto obj = map.GetObject(x, y);
+            if(!obj) continue;
+
+            if(CheckCollisionRecs(playerRec, obj->GetRec())){
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void GameState::InitTextures(){
+    //temp
+    TextureManager::LoadTexture("PLAYER", "assets/player.png");
+
     //objects
     TextureManager::LoadTexture("CHEST", "assets/chest2.png");
     TextureManager::LoadTexture("WALL", "assets/wall.png");

@@ -17,7 +17,35 @@ void TileMap::Render()
     }
 }
 
-void TileMap::Update(const Vector2& mousePos){
+void TileMap::RenderBelowPlayer(int playerY){
+    for(int y = playerY; y < height; y++){
+        for(int x = 0; x < width; x++){
+            tiles[y][x]->Render();
+
+            if(x == hoverRec.x && y == hoverRec.y){
+                this->hoverRec.x = x * TILESIZE;
+                this->hoverRec.y = y * TILESIZE;
+
+                DrawRectangleLinesEx(hoverRec, 1.0f, YELLOW);
+            }
+        }
+    }
+}
+
+void TileMap::RenderGround(){
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            tiles[y][x]->Render();
+        }
+    }
+}
+
+void TileMap::RenderTile(int x, int y){
+    tiles[y][x]->RenderObject();
+}
+
+void TileMap::Update(const Vector2 &mousePos)
+{
     if(IsWindowFocused()){
         hoverRec.x = int(mousePos.x) / TILESIZE;
         hoverRec.y = int(mousePos.y) / TILESIZE;

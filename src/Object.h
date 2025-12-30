@@ -12,11 +12,25 @@ public:
 
     ContentID& GetObjectID() { return this->objectID; }
 
-    void SetWorldPosition(Vector2 pos) { this->position = pos; }
+    Vector2& GetPosition() { return this->position; }
+    Rectangle GetRec() { return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight}; };
+
+    void SetWorldPosition(Vector2 pos) {
+        position = {
+            (pos.x + TILESIZE / 2.0f) - ((float)textureSize.x / 2.0f),
+            (pos.y + TILESIZE / 2.0f) - ((float)textureSize.y / 2.0f)
+        };
+    }
 
 
 protected:
+    Vector2 textureSize;
     Vector2 position = {0, 0};
+
+    float hitboxWidth = 0;
+    float hitboxHeight = 0;
+    float hitboxOffsetX = 0;
+    float hitboxOffsetY = 0;
 
     ContentID objectID;
 };

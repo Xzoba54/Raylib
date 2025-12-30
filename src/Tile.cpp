@@ -13,7 +13,12 @@ void Tile::Render() const
     }
 }
 
-void Tile::SetObject(const std::shared_ptr<Object>& obj){
+void Tile::RenderObject(){
+    object->Render();
+}
+
+void Tile::SetObject(const std::shared_ptr<Object> &obj)
+{
     this->object = obj;
     if(this->object){
         this->object->SetWorldPosition(position);

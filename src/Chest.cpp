@@ -4,7 +4,13 @@ Chest::Chest(){
     this->objectID = ContentID::Chest;
 
     this->texture = TextureManager::GetTexture("CHEST");
-    this->position = {64, 64};
+
+    this->hitboxWidth = 20;
+    this->hitboxHeight = 10;
+    this->hitboxOffsetX = 3;
+    this->hitboxOffsetY = 9;
+
+    this->textureSize = {(float)texture.width, (float)texture.height};
 
     this->inventorySize = 14;
     this->slotsPerInventoryRow = 6;
