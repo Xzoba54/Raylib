@@ -70,17 +70,35 @@ void GameState::Render(){
     //render world
     BeginMode2D(camera);
 
-    //experiment
-    map.Render();
+    //new rendering system
+    std::vector<std::pair<int, int>> objectsAbovePlayer;
+
+    int leftTileX = GetScreenToGridPosition(player.GetPosition()).x;
+    int tileY = GetScreenToGridPosition({player.GetPosition().x, player.GetPosition().y + player.GetHeight()}).y;
+
+    if(ShouldRenderAbovePlayer(leftTileX, tileY)){
+        objectsAbovePlayer.push_back(std::make_pair(leftTileX, tileY));
+    }
+
+    int rightTileX = GetScreenToGridPosition({
+        player.GetPosition().x + player.GetPhysicalRec().width,
+        player.GetPhysicalRec().y}
+    ).x;
+
+    if(leftTileX != rightTileX && ShouldRenderAbovePlayer(rightTileX, tileY)){
+        objectsAbovePlayer.push_back(std::make_pair(rightTileX, tileY));
+    }
+
+    map.RenderGround();
+    map.RenderObjectsExcept(objectsAbovePlayer);
 
     player.Render();
 
-    map.RenderTile(1, 1);
+    for(auto& obj : objectsAbovePlayer){
+        map.RenderTile(obj.first, obj.second);
+    }
 
-    //end experiment
-
-    // map.RenderBelowPlayer(int((player.GetPosition().y + player.GetHeight()) / TILESIZE));
-    std::cout << player.GetPosition().y << "\n";
+    //end new rendering system
     slime->Render();
     EndMode2D();
 
@@ -90,6 +108,21 @@ void GameState::Render(){
     if(chestUI.IsOpen()){
         chestUI.Render();
     }
+}
+
+bool GameState::ShouldRenderAbovePlayer(int tileX, int tileY){
+    if(!map.HasObject(tileX, tileY)) return false;
+
+    Rectangle objectPhysicalRec = map.GetObject(tileX, tileY)->GetPhysicalRec();
+    Rectangle playerPhysicalRec = player.GetPhysicalRec();
+
+    return playerPhysicalRec.y < objectPhysicalRec.y &&
+           objectPhysicalRec.y + objectPhysicalRec.height > playerPhysicalRec.y + playerPhysicalRec.height &&
+           player.GetPosition().y + player.GetPhysicalRec().height <= map.GetObject(tileX, tileY)->GetRec().y;
+}
+
+Vector2 GameState::GetScreenToGridPosition(Vector2 pos){
+    return {pos.x / TILESIZE, pos.y / TILESIZE};
 }
 
 void GameState::HandleCameraInput(){
@@ -160,6 +193,12 @@ bool GameState::CheckPlayerCollision(Rectangle playerRec){
 
     return false;
 }
+
+// std::vector<Vector2> GameState::GetObjectsToRenderAfterPlayer(){
+//     std::vector<Vector2> objects;
+
+//     if(player.GetRec())
+// }
 
 void GameState::InitTextures(){
     //temp

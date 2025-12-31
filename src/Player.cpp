@@ -52,11 +52,12 @@ void Player::Render() const{
 
 void Player::ProcessInput(){
     movement = {0, 0};
+    float speed = 1.0f;
 
-    if(IsKeyDown(KEY_A)) movement.x -= 1;
-    if(IsKeyDown(KEY_D)) movement.x += 1;
-    if(IsKeyDown(KEY_W)) movement.y -= 1;
-    if(IsKeyDown(KEY_S)) movement.y += 1;
+    if(IsKeyDown(KEY_A)) movement.x -= speed;
+    if(IsKeyDown(KEY_D)) movement.x += speed;
+    if(IsKeyDown(KEY_W)) movement.y -= speed;
+    if(IsKeyDown(KEY_S)) movement.y += speed;
         
 }
 
@@ -78,6 +79,10 @@ void Player::Move(Vector2 delta){
 
 Rectangle Player::GetRec(){
     return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight };
+}
+
+Rectangle Player::GetPhysicalRec(){
+    return {position.x, position.y, (float)texture.width, (float)texture.height};
 }
 
 void Player::Init(int x, int y){

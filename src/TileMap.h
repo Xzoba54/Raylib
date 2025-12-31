@@ -10,6 +10,7 @@
 #include "Chest.h"
 #include "ObjectRegistry.h"
 #include "Player.h"
+#include <algorithm>
 
 constexpr const char* IDToNames[] = {
     "EMPTY",
@@ -28,6 +29,7 @@ public:
     void Render();
     void RenderBelowPlayer(int playerY);
     void RenderGround();
+    void RenderObjectsExcept(std::vector<std::pair<int, int>> except);
 
 
     //TEMP

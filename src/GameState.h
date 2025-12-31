@@ -35,6 +35,10 @@ private:
     void HandleMouseClickRight();
 
     bool CheckPlayerCollision(Rectangle playerRec);
+    bool ShouldRenderAbovePlayer(int tileX, int tileY);
+
+    Vector2 GetScreenToGridPosition(Vector2 pos);
+    // std::vector<Vector2> GetObjectsToRenderAfterPlayer();
 
     TileMap map;
     Camera2D camera;

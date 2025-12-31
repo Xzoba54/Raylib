@@ -21,9 +21,13 @@ public:
     Vector2 GetMovement();
     int GetHeight();
 
+    //TEMP
+    int GetHitboxOffsetY() { return hitboxOffsetY; };
+
     void Move(Vector2 delta);
 
     Rectangle GetRec();
+    Rectangle GetPhysicalRec();
 
     void Init(int x, int y);
 private:

@@ -36,6 +36,25 @@ void TileMap::RenderGround(){
     for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
             tiles[y][x]->Render();
+
+            if(x == hoverRec.x && y == hoverRec.y){
+                this->hoverRec.x = x * TILESIZE;
+                this->hoverRec.y = y * TILESIZE;
+
+                DrawRectangleLinesEx(hoverRec, 1.0f, YELLOW);
+            }
+        }
+    }
+}
+
+void TileMap::RenderObjectsExcept(std::vector<std::pair<int, int>> except){
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            auto it = std::find(except.begin(), except.end(), std::make_pair(x, y));
+
+            if(it != except.end()   ) continue;
+
+            tiles[y][x]->RenderObject();
         }
     }
 }

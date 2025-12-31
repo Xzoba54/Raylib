@@ -8,12 +8,11 @@ Tile::Tile(int x, int y, const Texture2D& texture) :
 void Tile::Render() const
 {
     DrawTexture(texture, position.x, position.y, WHITE);
-    if(this->object){
-        this->object->Render();
-    }
 }
 
 void Tile::RenderObject(){
+    if(!object) return;
+    
     object->Render();
 }
 

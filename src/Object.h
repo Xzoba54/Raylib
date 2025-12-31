@@ -15,6 +15,8 @@ public:
     Vector2& GetPosition() { return this->position; }
     Rectangle GetRec() { return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight}; };
 
+    Rectangle GetPhysicalRec() { return {position.x, position.y, textureSize.x, textureSize.y}; }
+
     void SetWorldPosition(Vector2 pos) {
         position = {
             (pos.x + TILESIZE / 2.0f) - ((float)textureSize.x / 2.0f),
