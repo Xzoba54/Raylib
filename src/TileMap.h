@@ -12,38 +12,26 @@
 #include "Player.h"
 #include <algorithm>
 
-constexpr const char* IDToNames[] = {
-    "EMPTY",
-    "GRASS",
-    "DIRT",
-    "PLOWED",
-    "IRON",
-    "ROCKS"
-};
-
 class TileMap{
 public:
-    TileMap() = default;
+    TileMap();
 
-    //?????
-    void Render();
-    void RenderBelowPlayer(int playerY);
     void RenderGround();
     void RenderObjectsExcept(std::vector<std::pair<int, int>> except);
-
-
-    //TEMP
-    void RenderTile(int x, int y);
+    void RenderObjectAt(int x, int y);
 
     void Update(const Vector2& mousePos);
-
-    void Init();
 
     void SetObject(int x, int y, ContentID objectID);
     void RemoveObject(int x, int y);
 
+    Vector2 GetSize() const;
+
     bool HasObject(int x, int y) const;
     bool IsValidPosition(int x, int y) const;
+
+    void Serialize(std::vector<uint8_t>& out) const;
+    void Deserialize(int width, int height, std::vector<uint8_t> data);
 
     std::shared_ptr<Object> GetObject(int x, int y) const;
     ContentID GetObjectID(int x, int y) const;

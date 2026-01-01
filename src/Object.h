@@ -2,6 +2,7 @@
 
 #include "raylib.h"
 #include "Register.h"
+#include <vector>
 
 class Object{
 public:
@@ -14,6 +15,8 @@ public:
 
     Vector2& GetPosition() { return this->position; }
     Rectangle GetRec() { return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight}; };
+
+    virtual void Serialize(std::vector<uint8_t>& out) const {};
 
     Rectangle GetPhysicalRec() { return {position.x, position.y, textureSize.x, textureSize.y}; }
 

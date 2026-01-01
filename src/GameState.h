@@ -1,8 +1,8 @@
 #pragma once
 
+#include "NetworkManager.h"
 #include "State.h"
 #include "TileMap.h"
-#include <iostream>
 #include "Slime.h"
 #include "Chest.h"
 #include "ToolBar.h"
@@ -11,51 +11,60 @@
 #include "ChestUI.h"
 #include "Player.h"
 
-enum class Mode{
-    NORMAL,
-    BUILDING
+#include <iostream>
+
+enum class GameMode{
+    Singleplayer,
+    Multiplayer
 };
 
 class GameState : public State {
 public:
-    GameState(Window& window);
+    GameState(Window& window, GameMode mode, bool isServer = false);
 
     void Update() override;
     void Render() override;
+private:
+    std::vector<std::pair<int, int>> GetObjectsAbovePlayer();
+
+    Vector2 GetScreenToGridPosition(Vector2 pos);
 
     void InitTextures();
-private:
+    void InitCamera();
+
     void ProcessInput();
     void HandleCameraInput();
-
     void UpdateMouseRouting();
     void HandleWorldClick();
-
     void HandleMouseClickLeft();
     void HandleMouseClickRight();
 
+    void ProcessPlayerMovement();
     bool CheckPlayerCollision(Rectangle playerRec);
     bool ShouldRenderAbovePlayer(int tileX, int tileY);
 
-    Vector2 GetScreenToGridPosition(Vector2 pos);
-    // std::vector<Vector2> GetObjectsToRenderAfterPlayer();
+    void UpdateNetwork();
 
     TileMap map;
     Camera2D camera;
 
-    std::unique_ptr<Slime> slime;
+    GameMode mode;
 
-    ToolBar toolbar;
+    Player player;
+    std::unique_ptr<Slime> slime;
 
     Vector2 mousePosInWorld;
     float gridX;
     float gridY;
     
-    Mode mode;
-    
     ContentID selectedItemID;
 
-    Player player;
-
+    ToolBar toolbar;
     ChestUI chestUI;
+
+    //multiplayer
+    std::unordered_map<uint8_t, Player> remotePlayers;
+    uint8_t localPlayerID = 0;
+
+    NetworkManager network;
 };

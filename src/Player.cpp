@@ -73,6 +73,10 @@ int Player::GetHeight(){
     return frames[0].height;
 }
 
+void Player::SetPosition(float x, float y){
+    this->position = {x, y};
+}
+
 void Player::Move(Vector2 delta){
     position = {position.x + delta.x, position.y + delta.y};
 }

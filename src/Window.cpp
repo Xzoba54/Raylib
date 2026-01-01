@@ -24,6 +24,10 @@ void Window::CloseWindow(){
     CloseWindow();
 }
 
+void Window::SetTitle(const char *title){
+    SetWindowTitle(title);
+}
+
 Vector2 &Window::GetSize() {
     return this->size;
 }

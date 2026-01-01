@@ -21,6 +21,8 @@ public:
     Vector2 GetMovement();
     int GetHeight();
 
+    void SetPosition(float x, float y);
+
     //TEMP
     int GetHitboxOffsetY() { return hitboxOffsetY; };
 

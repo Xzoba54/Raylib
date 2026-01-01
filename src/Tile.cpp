@@ -1,8 +1,10 @@
 #include "Tile.h"
 
-Tile::Tile(int x, int y, const Texture2D& texture) :
-    position{(float)x, (float)y}, texture(texture)
-{
+Tile::Tile(int x, int y, GroundID id){
+    this->position = {static_cast<float>(x), static_cast<float>(y)};
+    this->groundID = id;
+
+    this->texture = TextureManager::GetTexture(groundID);
 }
 
 void Tile::Render() const
@@ -26,4 +28,8 @@ void Tile::SetObject(const std::shared_ptr<Object> &obj)
 
 ContentID Tile::GetObjectID() const{
     return object->GetObjectID();
+}
+
+GroundID Tile::GetGroundID() const{
+    return groundID;
 }

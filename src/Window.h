@@ -12,6 +12,7 @@ public:
     void SetFps(int fps);
     void SetSize(int width, int height);
     void CloseWindow();
+    void SetTitle(const char* title);
 
     Vector2& GetSize();
 

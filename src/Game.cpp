@@ -31,9 +31,11 @@ void Game::Update(){
     state->Update();
 
     StateAction action = state->GetAction();
-    if(action == StateAction::Pop)                  states.pop();
-    if(action == StateAction::PushGameState)        states.push(std::make_unique<GameState>(this->window));
-    if(action == StateAction::PushMainMenuState)    states.push(std::make_unique<MainMenuState>(this->window));
+    if(action == StateAction::Pop)                              states.pop();
+    if(action == StateAction::PushGameStateSingleplayer)        states.push(std::make_unique<GameState>(this->window, GameMode::Singleplayer));
+    if(action == StateAction::PushGameStateMultiplayerServer)   states.push(std::make_unique<GameState>(this->window, GameMode::Multiplayer, true));
+    if(action == StateAction::PushGameStateMultiplayerClient)   states.push(std::make_unique<GameState>(this->window, GameMode::Multiplayer, false));
+    if(action == StateAction::PushMainMenuState)                states.push(std::make_unique<MainMenuState>(this->window));
 
     state->ClearAction();
 }

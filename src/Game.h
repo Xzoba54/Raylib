@@ -2,6 +2,7 @@
 
 #include "MainMenuState.h"
 #include "GameState.h"
+#include "Register.h"
 
 class Game {
 public:

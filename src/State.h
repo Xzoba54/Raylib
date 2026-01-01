@@ -7,7 +7,9 @@ enum class StateAction{
     None,
     Pop,
     PushMainMenuState,
-    PushGameState
+    PushGameStateSingleplayer,
+    PushGameStateMultiplayerServer,
+    PushGameStateMultiplayerClient
 };
 
 class State{
