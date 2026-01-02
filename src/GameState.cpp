@@ -59,7 +59,7 @@ void GameState::Update(){
     selectedItemID = toolbar.GetSelectedItem();
 
     //TEMP
-    if(map.GetObjectID(gridX, gridY) == ContentID::Chest && IsKeyPressed(KEY_P)){
+    if(map.GetObjectType(gridX, gridY) == ContentID::Chest && IsKeyPressed(KEY_P)){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
 
         std::vector<uint8_t> out;
@@ -219,7 +219,7 @@ void GameState::HandleWorldClick(){
 }
 
 void GameState::HandleMouseClickLeft(){
-    ContentID objectID = map.GetObjectID(gridX, gridY);
+    ContentID objectType = map.GetObjectType(gridX, gridY);
     
     //building
     if(selectedItemID != ContentID::None && ObjectRegistry::IsPlaceable(selectedItemID)){
@@ -228,7 +228,7 @@ void GameState::HandleMouseClickLeft(){
     if(selectedItemID != ContentID::None) return;
 
     //interaction with objects
-    if(objectID == ContentID::Chest){
+    if(objectType == ContentID::Chest){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));
         chestUI.Open(chest);
     }

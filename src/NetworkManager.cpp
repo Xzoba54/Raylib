@@ -159,9 +159,7 @@ void NetworkManager::SendTileMapGround(uint8_t clientID, int width, int height, 
     packetData.insert(packetData.end(), data.begin(), data.end());
 
     ENetPacket* pkt = enet_packet_create(packetData.data(), packetData.size(), ENET_PACKET_FLAG_RELIABLE);
-    std::cout << "presend\n";
     enet_peer_send(it->second, 0, pkt);
-    std::cout << "sent\n";
 }
 
 NetworkMode NetworkManager::GetMode(){

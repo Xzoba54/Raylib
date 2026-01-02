@@ -28,4 +28,5 @@ public:
     static const bool IsPlaceable(ContentID id);
 private:
     static ObjectDef objects[(int)ContentID::COUNT];
+    static unsigned int nextID;
 };

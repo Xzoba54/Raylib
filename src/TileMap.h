@@ -34,11 +34,12 @@ public:
     void Deserialize(int width, int height, std::vector<uint8_t> data);
 
     std::shared_ptr<Object> GetObject(int x, int y) const;
-    ContentID GetObjectID(int x, int y) const;
+    ContentID GetObjectType(int x, int y) const;
 
     void LoadMapFromFile();
 private:
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
+    std::unordered_map<unsigned int, std::shared_ptr<Object>> objects;
 
     std::fstream stream;
 

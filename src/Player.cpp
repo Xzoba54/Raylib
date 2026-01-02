@@ -96,7 +96,7 @@ void Player::Init(int x, int y){
     this->playerState = PlayerState::IDLE;
 
     this->hitboxWidth = 9;
-    this->hitboxHeight = 4; //ewentualnie 3 ale wtedy daj 28 offsetY
+    this->hitboxHeight = 4;
     this->hitboxOffsetX = 7;
     this->hitboxOffsetY = 28;
 

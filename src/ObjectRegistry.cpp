@@ -3,6 +3,7 @@
 #include "Chest.h"
 
 ObjectDef ObjectRegistry::objects[(int)ContentID::COUNT];
+unsigned int ObjectRegistry::nextID = 1;
 
 void ObjectRegistry::Init(){
     objects[(int)ContentID::Chest] = {ContentID::Chest, "CHEST", [](){ return std::make_shared<Chest>(); }};
@@ -10,11 +11,19 @@ void ObjectRegistry::Init(){
 }
 
 const std::shared_ptr<Object> ObjectRegistry::Create(ContentID id){
-    return objects[(int)id].createFunction();
+    std::shared_ptr<Object> object = objects[(int)id].createFunction();
+    object->SetID(nextID);
+    nextID++;
+
+    return object;
 }
 
 const std::shared_ptr<Object> ObjectRegistry::Create(int id){
-    return objects[id].createFunction();
+    std::shared_ptr<Object> object = objects[id].createFunction();
+    object->SetID(nextID);
+    nextID++;
+
+    return object;
 }
 
 const bool ObjectRegistry::Exists(ContentID id){

@@ -9,6 +9,7 @@ void TileMap::SetObject(int x, int y, ContentID objectID){
     if(HasObject(x, y)) return;
 
     std::shared_ptr<Object> object = ObjectRegistry::Create(objectID);
+    objects[object->GetID()] = object;
     tiles[y][x]->SetObject(object);
 }
 
@@ -63,11 +64,11 @@ std::shared_ptr<Object> TileMap::GetObject(int x, int y) const{
     return tiles[y][x]->GetObject();
 }
 
-ContentID TileMap::GetObjectID(int x, int y) const{
+ContentID TileMap::GetObjectType(int x, int y) const{
     if(!IsValidPosition(x, y)) return ContentID::None;
     if(!HasObject(x, y)) return ContentID::None;
 
-    return tiles[y][x]->GetObjectID();
+    return tiles[y][x]->GetType();
 }
 
 void TileMap::LoadMapFromFile(){

@@ -11,7 +11,10 @@ public:
     virtual void Update() = 0;
     virtual void Render() const = 0;
 
-    ContentID& GetObjectID() { return this->objectID; }
+    void SetID(int id) { this->objectID = id; }
+    unsigned int GetID() { return this->objectID; }
+
+    ContentID& GetType() { return this->objectType; }
 
     Vector2& GetPosition() { return this->position; }
     Rectangle GetRec() { return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight}; };
@@ -26,8 +29,6 @@ public:
             (pos.y + TILESIZE / 2.0f) - ((float)textureSize.y / 2.0f)
         };
     }
-
-
 protected:
     Vector2 textureSize;
     Vector2 position = {0, 0};
@@ -37,5 +38,6 @@ protected:
     float hitboxOffsetX = 0;
     float hitboxOffsetY = 0;
 
-    ContentID objectID;
+    ContentID objectType;
+    unsigned int objectID;
 };

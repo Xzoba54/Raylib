@@ -1,7 +1,7 @@
 #include "Chest.h"
 
 Chest::Chest(){
-    this->objectID = ContentID::Chest;
+    this->objectType = ContentID::Chest;
 
     this->texture = TextureManager::GetTexture("CHEST");
 

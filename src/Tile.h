@@ -17,7 +17,7 @@ public:
     void SetObject(const std::shared_ptr<Object>& obj);
     std::shared_ptr<Object>& GetObject() { return this->object; }
 
-    ContentID GetObjectID() const;
+    ContentID GetType() const;
     GroundID GetGroundID() const;
 
     Vector2 GetWorldPosition() const { return this->position; }

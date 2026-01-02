@@ -26,8 +26,8 @@ void Tile::SetObject(const std::shared_ptr<Object> &obj)
     }
 }
 
-ContentID Tile::GetObjectID() const{
-    return object->GetObjectID();
+ContentID Tile::GetType() const{
+    return object->GetType();
 }
 
 GroundID Tile::GetGroundID() const{

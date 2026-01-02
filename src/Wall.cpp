@@ -1,7 +1,7 @@
 #include "Wall.h"
 
 Wall::Wall(){
-    this->objectID = ContentID::Wall;
+    this->objectType = ContentID::Wall;
 
     this->texture = TextureManager::GetTexture("WALL");
     this->textureSize = {(float)texture.width, (float)texture.height};
