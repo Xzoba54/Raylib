@@ -40,6 +40,10 @@ void ChestUI::Open(std::shared_ptr<Chest> chest){
     }
 }
 
+std::shared_ptr<Chest> ChestUI::GetCurrentChest() const{
+    return currentChest;
+}
+
 Rectangle ChestUI::GetRec() const{
     Rectangle rec = {x, y, (float)(texture.width), (float)(texture.height)};
 

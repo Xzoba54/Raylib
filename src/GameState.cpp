@@ -70,7 +70,13 @@ void GameState::Update(){
         chest->Serialize(out);
     }
 
-    if(chestUI.IsOpen()) chestUI.Update();
+    if(chestUI.IsOpen()){
+        float distance = Vector2Distance(chestUI.GetCurrentChest()->GetPositionCenter(), player.GetPositionCenter());
+        if(distance > maxDistanceToInteract) chestUI.Close();
+
+        chestUI.Update();
+    } 
+        
     toolbar.Update();
 
     if(mode == GameMode::Multiplayer) UpdateNetwork();
@@ -226,7 +232,11 @@ void GameState::HandleMouseClickLeft(){
         map.SetObject(gridX, gridY, selectedItemID);
     }
     if(selectedItemID != ContentID::None) return;
+    if(objectType == ContentID::None) return;
 
+    float distance = Vector2Distance(map.GetObject(gridX, gridY)->GetPositionCenter(), player.GetPositionCenter());
+    if(distance > maxDistanceToInteract) return;
+    
     //interaction with objects
     if(objectType == ContentID::Chest){
         std::shared_ptr<Chest> chest = std::dynamic_pointer_cast<Chest>(map.GetObject(gridX, gridY));

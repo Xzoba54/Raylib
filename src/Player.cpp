@@ -65,6 +65,10 @@ Vector2 &Player::GetPosition(){
     return position;
 }
 
+Vector2 Player::GetPositionCenter(){
+    return {position.x + texture.width / 2.0f, position.y + texture.height / 2.0f};
+}
+
 Vector2 Player::GetMovement(){
     return movement;
 }

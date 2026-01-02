@@ -62,6 +62,8 @@ private:
     ToolBar toolbar;
     ChestUI chestUI;
 
+    float maxDistanceToInteract = TILESIZE * 5;
+
     //multiplayer
     std::unordered_map<uint8_t, Player> remotePlayers;
     uint8_t localPlayerID = 0;

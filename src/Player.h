@@ -18,6 +18,7 @@ public:
     void ProcessInput();
 
     Vector2& GetPosition();
+    Vector2 GetPositionCenter();
     Vector2 GetMovement();
     int GetHeight();
 

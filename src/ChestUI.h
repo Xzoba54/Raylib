@@ -18,6 +18,7 @@ public:
     Rectangle GetRec() const override;
 
     void Open(std::shared_ptr<Chest> chest);
+    std::shared_ptr<Chest> GetCurrentChest() const;
 private:
     Texture2D texture;
 

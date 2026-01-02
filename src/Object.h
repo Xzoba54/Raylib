@@ -17,6 +17,7 @@ public:
     ContentID& GetType() { return this->objectType; }
 
     Vector2& GetPosition() { return this->position; }
+    Vector2 GetPositionCenter() { return {position.x + textureSize.x / 2.0f, position.y + textureSize.y / 2.0f}; };
     Rectangle GetRec() { return {position.x + hitboxOffsetX, position.y + hitboxOffsetY, hitboxWidth, hitboxHeight}; };
 
     virtual void Serialize(std::vector<uint8_t>& out) const {};
